@@ -67,26 +67,20 @@ public class RectTest {
         assertEquals(0, r.getArea());
     }
 
-    // Partition 5: Negative values (invalid input - reveals lack of validation)
-    @Test
+    // Partition 5: Negative values - after fix, should throw IllegalArgumentException
+    @Test(expected = IllegalArgumentException.class)
     public void testGetArea_negativeLength() {
-        Rect r = new Rect(-3, 5);
-        // Area should not be negative; current code returns -15
-        // This reveals a bug: no input validation
-        assertEquals(-15, r.getArea());
+        new Rect(-3, 5);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testGetArea_negativeWidth() {
-        Rect r = new Rect(5, -3);
-        assertEquals(-15, r.getArea());
+        new Rect(5, -3);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testGetArea_bothNegative() {
-        Rect r = new Rect(-3, -5);
-        // (-3)*(-5) = 15, mathematically positive but semantically wrong
-        assertEquals(15, r.getArea());
+        new Rect(-3, -5);
     }
 
     // --- Black-box: Boundary Value Analysis ---
@@ -181,12 +175,9 @@ public class RectTest {
         assertEquals(40000, r.getPerimeter());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testGetPerimeter_negativeValues() {
-        Rect r = new Rect(-3, 5);
-        // (-3)*2 + 5*2 = -6 + 10 = 4
-        // Perimeter should never be based on negative dimensions
-        assertEquals(4, r.getPerimeter());
+        new Rect(-3, 5);
     }
 
     // --- White-box: Statement coverage ---
@@ -271,27 +262,24 @@ public class RectTest {
         assertEquals(100, max.getArea());
     }
 
-    // --- Black-box: Empty array (should throw exception) ---
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    // --- Black-box: Empty array (should throw IllegalArgumentException after fix) ---
+    @Test(expected = IllegalArgumentException.class)
     public void testFindMax_emptyArray() {
         Rect[] arr = {};
         Rect.findMax(arr, new Rect.areaCompare());
-        // BUG: No empty array check, throws ArrayIndexOutOfBoundsException
     }
 
-    // --- Black-box: Null array (should throw exception) ---
-    @Test(expected = NullPointerException.class)
+    // --- Black-box: Null array (should throw IllegalArgumentException after fix) ---
+    @Test(expected = IllegalArgumentException.class)
     public void testFindMax_nullArray() {
         Rect.findMax(null, new Rect.areaCompare());
-        // BUG: No null check, throws NullPointerException
     }
 
-    // --- Black-box: Null comparator (with >1 elements to trigger compare) ---
-    @Test(expected = NullPointerException.class)
+    // --- Black-box: Null comparator (should throw IllegalArgumentException after fix) ---
+    @Test(expected = IllegalArgumentException.class)
     public void testFindMax_nullComparator() {
         Rect[] arr = {new Rect(1, 1), new Rect(2, 2)};
         Rect.findMax(arr, null);
-        // BUG: No null check for comparator, throws NPE when compare is called
     }
 
     // --- White-box: Branch coverage for findMax ---
@@ -364,6 +352,19 @@ public class RectTest {
         r.setWidth(3);
         assertEquals(24, r.getArea());
         assertEquals(22, r.getPerimeter());
+    }
+
+    // Test setter validation rejects negative values
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetLength_negative() {
+        Rect r = new Rect(5, 10);
+        r.setLength(-1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetWidth_negative() {
+        Rect r = new Rect(5, 10);
+        r.setWidth(-1);
     }
 
     // Test getObject() output format

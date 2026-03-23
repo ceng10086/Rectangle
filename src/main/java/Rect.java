@@ -6,6 +6,9 @@ public class Rect {
     private int width;
 
     public Rect(int length, int width) {
+        if (length < 0 || width < 0) {
+            throw new IllegalArgumentException("Length and width must be non-negative");
+        }
         this.length = length;
         this.width = width;
     }
@@ -14,6 +17,9 @@ public class Rect {
         return length;
     }
     public void setLength(int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Length must be non-negative");
+        }
         this.length = length;
     }
 
@@ -21,6 +27,9 @@ public class Rect {
         return width;
     }
     public void setWidth(int width) {
+        if (width < 0) {
+            throw new IllegalArgumentException("Width must be non-negative");
+        }
         this.width = width;
     }
 
@@ -36,6 +45,12 @@ public class Rect {
     }
     public static <AnyType>
     AnyType findMax(AnyType[] arr, Comparator<? super AnyType> cmp) {
+        if (arr == null || arr.length == 0) {
+            throw new IllegalArgumentException("Array must not be null or empty");
+        }
+        if (cmp == null) {
+            throw new IllegalArgumentException("Comparator must not be null");
+        }
 
         int maxIndex = 0;
 
